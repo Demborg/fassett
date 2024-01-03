@@ -1,3 +1,16 @@
+# Fassett
+
+Trying to replicate this lovely pattern sample by Kaffe Fassett as a procedural thingy:
+![](fassett.jpg)
+
+## Subtasks
+
+- [ ] Make a procedural tiling pattern
+- [ ] Make procedural pallets
+- [ ] Layout
+- [ ] Text and stuff
+- [ ] Make it feel a bit organic?
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
