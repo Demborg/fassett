@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Pattern from '$lib/Pattern.svelte';
 	import { makePalette } from '$lib/color';
-	import { slide } from 'svelte/transition';
+	import PaletteDisplay from './PaletteDisplay.svelte';
     
     const seed = Math.random() * 1337;
     const palettes = [...Array(5)].map(() => makePalette())
@@ -9,6 +9,11 @@
 
 <main>
 <Pattern {seed} palette={palettes[0]}/>
+
+
+{#each palettes.slice(1) as palette}
+    <PaletteDisplay palette={palette} name="Green"/>
+{/each}
 
 <samples>
     {#each palettes.slice(1) as palette}
