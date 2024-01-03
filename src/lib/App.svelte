@@ -11,7 +11,7 @@
 <Pattern {seed} palette={palettes[0]}/>
 
 
-{#each palettes.slice(1) as palette}
+{#each palettes as palette}
     <PaletteDisplay palette={palette} name="Green"/>
 {/each}
 
