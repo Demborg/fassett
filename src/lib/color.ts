@@ -5,6 +5,7 @@ export type Palette = {
 	leaf: Color;
 	detail1: Color;
 	detail2: Color;
+    name: string;
 };
 
 export const defaultPalette: Palette = {
@@ -12,11 +13,18 @@ export const defaultPalette: Palette = {
 	petal: '#ffffff',
 	leaf: '#373557',
 	detail1: '#adb8d0',
-	detail2: '#96a0c0'
+	detail2: '#96a0c0',
+    name: "blue"
 };
 
 function lerp(a:number, b:number, t: number) {
     return a + t * (b - a);
+}
+
+function nameHSL(hueDeg: number, saturationPercent: number, lightnessPercent: number) {
+    const index = Math.round((hueDeg % 360) / 30) ;
+    const colors = ["red", "orange", "yellow", "green", "green", "green", "cyan", "blue", "blue", "blue", "magenta", "red", "red"]
+    return colors[index]
 }
 
 export function makePalette(): Palette {
@@ -32,6 +40,7 @@ export function makePalette(): Palette {
         detail1: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.25)}%)`,
         detail2: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.5)}%)`,
         background: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.75)}%)`,
-        leaf: `hsl(${leafHue}deg, ${saturation}%, ${darkest}%)`
+        leaf: `hsl(${leafHue}deg, ${saturation}%, ${darkest}%)`,
+        name: nameHSL(hue, saturation,lerp(lightest, darkest, 0.5))
     }
 }

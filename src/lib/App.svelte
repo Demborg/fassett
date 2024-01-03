@@ -12,7 +12,7 @@
 
 
 {#each palettes as palette}
-    <PaletteDisplay palette={palette} name="Green"/>
+    <PaletteDisplay palette={palette}/>
 {/each}
 
 <samples>
@@ -24,7 +24,12 @@
 </main>
 
 <style>
+    @font-face {
+		font-family: 'Comic Neue';
+		src: url('/fonts/ComicNeue-Regular.ttf');
+	}
     main {
+        font-family: 'Comic Neue';
         max-width: 700px;
     }
     samples {
