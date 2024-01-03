@@ -34,6 +34,33 @@
 		);
 	}
 
+	function tilingElipse(ctx: CanvasRenderingContext2D, x: number, y: number, a: number, b: number, rotation: number) {
+		tilingCall(
+			(x, y) => {
+				ctx.moveTo(x, y);
+                ctx.ellipse(x, y, a, b, rotation, 0, 2*Math.PI)
+			},
+			x,
+			y
+		);
+	}
+
+	function tilingLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, rotation: number) {
+        const xOffset = Math.cos(rotation) * 100
+        const yOffset = Math.sin(rotation) * 100
+
+        ctx.beginPath()
+        ctx.fillStyle = palette.leaf
+        tilingElipse(ctx, x+xOffset, y+yOffset, 100, 50, rotation)
+        ctx.fill()
+
+        ctx.beginPath()
+        ctx.fillStyle = palette.detail1
+        tilingElipse(ctx, x+xOffset, y+yOffset, 75, 5, rotation)
+        ctx.fill()
+
+    }
+
 	function distance(a: Point, b: Point): number {
 		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 	}
@@ -74,11 +101,10 @@
 		});
 		const positions = filterMinDistance(candidates, minDistance);
 
-		ctx.fillStyle = palette.leaf;
 		positions.forEach((p) => {
-			tilingCircle(ctx, p.x, p.y, 100);
+			tilingLeaf(ctx, p.x, p.y, Math.random() * Math.PI * 2);
+			tilingLeaf(ctx, p.x, p.y, Math.random() * Math.PI * 2);
 		});
-		ctx.fill();
 	}
 </script>
 
