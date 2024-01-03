@@ -1,18 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { defaultPalette, type Palette } from './color';
+    import {splitmix32 } from './random'
 	const nFlowers = 200;
 	const size = 1000;
 	const minDistance = 200;
 	export let seed: number = 42;
 	export let palette: Palette = defaultPalette;
 	let canvas: HTMLCanvasElement;
+    let random: () => number;
 
 	type Point = { x: number; y: number };
 
 	$: draw(seed, palette);
 
-	onMount(() => draw(seed, palette));
+	onMount(() => {
+        random = splitmix32(seed)
+        draw(seed, palette)});
 
 	function tilingCall(fn: (x: number, y: number) => void, x: number, y: number) {
 		const offsets = [-size, 0, size];
@@ -68,7 +72,7 @@
 	}
 
 	function tilingFlower(ctx: CanvasRenderingContext2D, x: number, y: number) {
-		const initialRotation = Math.random() * Math.PI * 2;
+		const initialRotation = random() * Math.PI * 2;
 		for (let i = 0; i < 5; i++) {
 			const rotation = (i * 2 * Math.PI) / 5 + initialRotation;
 			const xOffset = Math.cos(rotation) * 50;
@@ -154,13 +158,13 @@
 		ctx.fillRect(0, 0, size, size);
 
 		const candidates = [...Array(nFlowers)].map(() => {
-			return { x: Math.random() * size, y: Math.random() * size };
+			return { x: random() * size, y: random() * size };
 		});
 		const positions = filterMinDistance(candidates, minDistance);
 
 		positions.forEach((p) => {
-			tilingLeaf(ctx, p.x, p.y, Math.random() * Math.PI * 2);
-			tilingLeaf(ctx, p.x, p.y, Math.random() * Math.PI * 2);
+			tilingLeaf(ctx, p.x, p.y, random() * Math.PI * 2);
+			tilingLeaf(ctx, p.x, p.y, random() * Math.PI * 2);
 		});
 
 		positions.forEach((p) => {
