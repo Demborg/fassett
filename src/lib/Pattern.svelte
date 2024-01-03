@@ -14,15 +14,24 @@
 
 	onMount(() => draw(seed, palette));
 
-	function tilingCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
-		let offsets = [-size, 0, size];
+	function tilingCall(fn: (x: number, y: number) => void, x: number, y: number) {
+		const offsets = [-size, 0, size];
 		offsets.forEach((dx) => {
 			offsets.forEach((dy) => {
-				ctx.moveTo(x + dx, y + dy);
-				ctx.arc(x + dx, y + dy, r, 0, 2 * Math.PI);
-				console.log('Circle at', x, y);
+				fn(x + dx, y + dy);
 			});
 		});
+	}
+
+	function tilingCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
+		tilingCall(
+			(x, y) => {
+				ctx.moveTo(x, y);
+				ctx.arc(x, y, r, 0, 2 * Math.PI);
+			},
+			x,
+			y
+		);
 	}
 
 	function distance(a: Point, b: Point): number {
