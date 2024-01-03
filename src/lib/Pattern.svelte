@@ -174,3 +174,9 @@
 </script>
 
 <canvas height={size} width={size} bind:this={canvas} />
+
+<style>
+    canvas {
+        width: 100%;
+    }
+</style>
