@@ -2,7 +2,7 @@ name: Build and deploy fassett svelte app
 
 on:
   push:
-    branches: ['main']
+    branches: ['master']
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
