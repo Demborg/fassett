@@ -46,15 +46,28 @@ export function makePalette(): Palette {
 	const lightest = 50 + Math.random() * 50;
 	const darkest = Math.random() * (100 - lightest);
 	const saturation = 50 + Math.random() * 50;
+    let leafHue = hue;
+    let leafLightness = darkest;
+    let bgHue = hue;
+    let bgLightness = lerp(lightest, darkest, 0.75)
 
-	const leafHue = Math.random() > 0.5 ? hue : hue + 180;
+    const flipp = Math.random();
+    if (flipp > 0.66) {
+        leafHue = hue + 180;
+        leafLightness = lerp(lightest, darkest, 0.5)
+        if (lerp(lightest, darkest, -0.25) < 100 && Math.random() > 0.3) {
+            bgLightness = lerp(lightest, darkest, -0.25)
+        }
+    } else if (flipp > 0.33) {
+        bgHue = hue +180;
+    }
 
 	return {
 		petal: `hsl(${hue}deg, ${saturation}%, ${lightest}%)`,
 		detail1: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.25)}%)`,
 		detail2: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.5)}%)`,
-		background: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.75)}%)`,
-		leaf: `hsl(${leafHue}deg, ${saturation}%, ${darkest}%)`,
+		background: `hsl(${bgHue}deg, ${saturation}%, ${bgLightness}%)`,
+		leaf: `hsl(${leafHue}deg, ${saturation}%, ${leafLightness}%)`,
 		name: nameHSL(hue, saturation, lerp(lightest, darkest, 0.5))
 	};
 }
