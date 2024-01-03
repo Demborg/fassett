@@ -5,7 +5,7 @@ export type Palette = {
 	leaf: Color;
 	detail1: Color;
 	detail2: Color;
-    name: string;
+	name: string;
 };
 
 export const defaultPalette: Palette = {
@@ -14,33 +14,47 @@ export const defaultPalette: Palette = {
 	leaf: '#373557',
 	detail1: '#adb8d0',
 	detail2: '#96a0c0',
-    name: "blue"
+	name: 'blue'
 };
 
-function lerp(a:number, b:number, t: number) {
-    return a + t * (b - a);
+function lerp(a: number, b: number, t: number) {
+	return a + t * (b - a);
 }
 
 function nameHSL(hueDeg: number, saturationPercent: number, lightnessPercent: number) {
-    const index = Math.round((hueDeg % 360) / 30) ;
-    const colors = ["red", "orange", "yellow", "green", "green", "green", "cyan", "blue", "blue", "blue", "magenta", "red", "red"]
-    return colors[index]
+	const index = Math.round((hueDeg % 360) / 30);
+	const colors = [
+		'red',
+		'orange',
+		'yellow',
+		'green',
+		'green',
+		'green',
+		'cyan',
+		'blue',
+		'blue',
+		'blue',
+		'magenta',
+		'red',
+		'red'
+	];
+	return colors[index];
 }
 
 export function makePalette(): Palette {
-    const hue = Math.random() * 360;
-    const lightest = 50 + Math.random() * 50;
-    const darkest = Math.random() * (100 - lightest);
-    const saturation = 50  + Math.random() * 50;
+	const hue = Math.random() * 360;
+	const lightest = 50 + Math.random() * 50;
+	const darkest = Math.random() * (100 - lightest);
+	const saturation = 50 + Math.random() * 50;
 
-    const leafHue = Math.random() > 0.5 ? hue : hue + 180
+	const leafHue = Math.random() > 0.5 ? hue : hue + 180;
 
-    return {
-        petal: `hsl(${hue}deg, ${saturation}%, ${lightest}%)`,
-        detail1: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.25)}%)`,
-        detail2: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.5)}%)`,
-        background: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.75)}%)`,
-        leaf: `hsl(${leafHue}deg, ${saturation}%, ${darkest}%)`,
-        name: nameHSL(hue, saturation,lerp(lightest, darkest, 0.5))
-    }
+	return {
+		petal: `hsl(${hue}deg, ${saturation}%, ${lightest}%)`,
+		detail1: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.25)}%)`,
+		detail2: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.5)}%)`,
+		background: `hsl(${hue}deg, ${saturation}%, ${lerp(lightest, darkest, 0.75)}%)`,
+		leaf: `hsl(${leafHue}deg, ${saturation}%, ${darkest}%)`,
+		name: nameHSL(hue, saturation, lerp(lightest, darkest, 0.5))
+	};
 }

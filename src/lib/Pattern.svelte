@@ -1,22 +1,23 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { defaultPalette, type Palette } from './color';
-    import {splitmix32 } from './random'
+	import { splitmix32 } from './random';
 	const nFlowers = 200;
 	const size = 1000;
 	const minDistance = 200;
 	export let seed: number = 42;
 	export let palette: Palette = defaultPalette;
 	let canvas: HTMLCanvasElement;
-    let random: () => number;
+	let random: () => number;
 
 	type Point = { x: number; y: number };
 
 	$: draw(seed, palette);
 
 	onMount(() => {
-        random = splitmix32(seed)
-        draw(seed, palette)});
+		random = splitmix32(seed);
+		draw(seed, palette);
+	});
 
 	function tilingCall(fn: (x: number, y: number) => void, x: number, y: number) {
 		const offsets = [-size, 0, size];
@@ -176,7 +177,7 @@
 <canvas height={size} width={size} bind:this={canvas} />
 
 <style>
-    canvas {
-        width: 100%;
-    }
+	canvas {
+		width: 100%;
+	}
 </style>
