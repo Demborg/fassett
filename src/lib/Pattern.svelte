@@ -34,11 +34,18 @@
 		);
 	}
 
-	function tilingElipse(ctx: CanvasRenderingContext2D, x: number, y: number, a: number, b: number, rotation: number) {
+	function tilingElipse(
+		ctx: CanvasRenderingContext2D,
+		x: number,
+		y: number,
+		a: number,
+		b: number,
+		rotation: number
+	) {
 		tilingCall(
 			(x, y) => {
 				ctx.moveTo(x, y);
-                ctx.ellipse(x, y, a, b, rotation, 0, 2*Math.PI)
+				ctx.ellipse(x, y, a, b, rotation, 0, 2 * Math.PI);
 			},
 			x,
 			y
@@ -46,20 +53,70 @@
 	}
 
 	function tilingLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, rotation: number) {
-        const xOffset = Math.cos(rotation) * 100
-        const yOffset = Math.sin(rotation) * 100
+		const xOffset = Math.cos(rotation) * 100;
+		const yOffset = Math.sin(rotation) * 100;
 
-        ctx.beginPath()
-        ctx.fillStyle = palette.leaf
-        tilingElipse(ctx, x+xOffset, y+yOffset, 100, 50, rotation)
-        ctx.fill()
+		ctx.beginPath();
+		ctx.fillStyle = palette.leaf;
+		tilingElipse(ctx, x + xOffset, y + yOffset, 50, 25, rotation);
+		ctx.fill();
 
-        ctx.beginPath()
-        ctx.fillStyle = palette.detail1
-        tilingElipse(ctx, x+xOffset, y+yOffset, 75, 5, rotation)
-        ctx.fill()
+		ctx.beginPath();
+		ctx.fillStyle = palette.detail1;
+		tilingElipse(ctx, x + xOffset, y + yOffset, 40, 5, rotation);
+		ctx.fill();
+	}
 
-    }
+	function tilingFlower(ctx: CanvasRenderingContext2D, x: number, y: number) {
+		const initialRotation = Math.random() * Math.PI * 2;
+		for (let i = 0; i < 5; i++) {
+			const rotation = (i * 2 * Math.PI) / 5 + initialRotation;
+			const xOffset = Math.cos(rotation) * 50;
+			const yOffset = Math.sin(rotation) * 50;
+
+			ctx.beginPath();
+			ctx.fillStyle = palette.petal;
+			tilingElipse(ctx, x + xOffset, y + yOffset, 50, 50, rotation);
+			ctx.fill();
+		}
+
+		ctx.beginPath();
+		ctx.fillStyle = palette.detail1;
+		tilingCircle(ctx, x, y, 40);
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.fillStyle = palette.detail2;
+		tilingCircle(ctx, x, y, 10);
+		ctx.fill();
+
+		ctx.beginPath();
+		ctx.fillStyle = palette.leaf;
+		tilingCircle(ctx, x, y, 5);
+		ctx.fill();
+
+		for (let i = 0; i < 15; i++) {
+			const rotation = (i * 2 * Math.PI) / 15 + initialRotation;
+			const xOffset = Math.cos(rotation) * 20;
+			const yOffset = Math.sin(rotation) * 20;
+
+			ctx.beginPath();
+			ctx.fillStyle = palette.leaf;
+			tilingElipse(ctx, x + xOffset, y + yOffset, 2, 2, rotation);
+			ctx.fill();
+		}
+
+		for (let i = 0; i < 20; i++) {
+			const rotation = (i * 2 * Math.PI) / 20 + initialRotation;
+			const xOffset = Math.cos(rotation) * 30;
+			const yOffset = Math.sin(rotation) * 30;
+
+			ctx.beginPath();
+			ctx.fillStyle = palette.leaf;
+			tilingElipse(ctx, x + xOffset, y + yOffset, 2, 2, rotation);
+			ctx.fill();
+		}
+	}
 
 	function distance(a: Point, b: Point): number {
 		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
@@ -104,6 +161,10 @@
 		positions.forEach((p) => {
 			tilingLeaf(ctx, p.x, p.y, Math.random() * Math.PI * 2);
 			tilingLeaf(ctx, p.x, p.y, Math.random() * Math.PI * 2);
+		});
+
+		positions.forEach((p) => {
+			tilingFlower(ctx, p.x, p.y);
 		});
 	}
 </script>
