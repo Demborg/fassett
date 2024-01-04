@@ -44,7 +44,7 @@ function nameHSL(hueDeg: number, saturationPercent: number, lightnessPercent: nu
 export function makePalette(): Palette {
 	const hue = Math.random() * 360;
 	const lightest = 50 + Math.random() * 50;
-	const darkest = Math.random() * (100 - lightest);
+	const darkest = Math.random() * (lightest - 50);
 	const saturation = 50 + Math.random() * 50;
 	let leafHue = hue;
 	let leafLightness = darkest;
