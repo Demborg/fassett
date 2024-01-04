@@ -71,3 +71,17 @@ export function makePalette(): Palette {
 		name: nameHSL(hue, saturation, lerp(lightest, darkest, 0.5))
 	};
 }
+
+export function rgbToHex(rgb: string): string | null {
+	let match = rgb.match(/rgb\((\d+), (\d+), (\d+)\)/);
+	if (!match) return null;
+	const rgbVals = match.slice(1).map(Number);
+
+	const hex = rgbVals
+		.map(function (val) {
+			const hexVal = val.toString(16);
+			return hexVal.length == 1 ? '0' + hexVal : hexVal;
+		})
+		.join('');
+	return '#' + hex; // Combine and return the hex result
+}
