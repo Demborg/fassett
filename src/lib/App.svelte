@@ -38,9 +38,17 @@
 		font-family: 'Comic Neue';
 		src: url('/fonts/ComicNeue-Regular.ttf');
 	}
+	:global(body) {
+		background-color: lightgray;
+	}
 	main {
+		margin: auto;
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
 		font-family: 'Comic Neue';
 		max-width: 700px;
+		background-color: white;
 	}
 	samples {
 		display: flex;
