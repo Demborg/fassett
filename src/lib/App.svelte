@@ -5,21 +5,28 @@
 
 	const seed = Math.random() * 1337;
 	const palettes = [...Array(5)].map(() => makePalette());
+	let highlightIndex: number = 0;
 </script>
 
 <main>
-	<Pattern {seed} palette={palettes[0]} />
+	<Pattern {seed} palette={palettes[highlightIndex]} />
 
 	{#each palettes as palette}
 		<PaletteDisplay {palette} />
 	{/each}
 
 	<samples>
-		{#each palettes.slice(1) as palette}
-			<sample>
-				<name>{palette.name}</name>
-				<Pattern {seed} {palette} />
-			</sample>
+		{#each palettes as palette, i}
+			{#if i !== highlightIndex}
+				<sample
+					on:click={() => {
+						highlightIndex = i;
+					}}
+				>
+					<name>{palette.name}</name>
+					<Pattern {seed} {palette} />
+				</sample>
+			{/if}
 		{/each}
 	</samples>
 </main>
