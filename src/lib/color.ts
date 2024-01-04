@@ -27,15 +27,15 @@ function nameHSL(hueDeg: number, saturationPercent: number, lightnessPercent: nu
 		'red',
 		'orange',
 		'yellow',
+		'chartreuse',
 		'green',
-		'green',
-		'green',
+		'spring green',
 		'cyan',
+		'azure',
 		'blue',
-		'blue',
-		'blue',
+		'purple',
 		'magenta',
-		'red',
+		'pink',
 		'red'
 	];
 	return colors[index];
@@ -46,21 +46,21 @@ export function makePalette(): Palette {
 	const lightest = 50 + Math.random() * 50;
 	const darkest = Math.random() * (100 - lightest);
 	const saturation = 50 + Math.random() * 50;
-    let leafHue = hue;
-    let leafLightness = darkest;
-    let bgHue = hue;
-    let bgLightness = lerp(lightest, darkest, 0.75)
+	let leafHue = hue;
+	let leafLightness = darkest;
+	let bgHue = hue;
+	let bgLightness = lerp(lightest, darkest, 0.75);
 
-    const flipp = Math.random();
-    if (flipp > 0.66) {
-        leafHue = hue + 180;
-        leafLightness = lerp(lightest, darkest, 0.5)
-        if (lerp(lightest, darkest, -0.25) < 100 && Math.random() > 0.3) {
-            bgLightness = lerp(lightest, darkest, -0.25)
-        }
-    } else if (flipp > 0.33) {
-        bgHue = hue +180;
-    }
+	const flipp = Math.random();
+	if (flipp > 0.66) {
+		leafHue = hue + 180;
+		leafLightness = lerp(lightest, darkest, 0.5);
+		if (lerp(lightest, darkest, -0.25) < 100 && Math.random() > 0.3) {
+			bgLightness = lerp(lightest, darkest, -0.25);
+		}
+	} else if (flipp > 0.33) {
+		bgHue = hue + 180;
+	}
 
 	return {
 		petal: `hsl(${hue}deg, ${saturation}%, ${lightest}%)`,
