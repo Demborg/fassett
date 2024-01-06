@@ -2,15 +2,14 @@
 	import { onMount } from 'svelte';
 	import { defaultPalette, type Palette } from './color';
 	import { splitmix32 } from './random';
-	const nFlowers = 200;
+	const nFlowers = 1000;
 	const size = 1000;
-	const minDistance = 200;
 	export let seed: number = 42;
 	export let palette: Palette = defaultPalette;
 	let canvas: HTMLCanvasElement;
 	let random: () => number;
 
-	type Point = { x: number; y: number };
+	type Point = { x: number; y: number, scale: number };
 
 	$: draw(seed, palette);
 
@@ -29,15 +28,12 @@
 	}
 
 	function tilingCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
-		tilingCall(
-			(x, y) => {
-				ctx.moveTo(x, y);
-				ctx.arc(x, y, r, 0, 2 * Math.PI);
-			},
-			x,
-			y
-		);
+        tilingElipse(ctx, x, y, r, r, random() * 2 * Math.PI)
 	}
+
+    function jitter() {
+        return random() * 2 -1
+    }
 
 	function tilingElipse(
 		ctx: CanvasRenderingContext2D,
@@ -47,6 +43,11 @@
 		b: number,
 		rotation: number
 	) {
+        x += jitter() * 2;
+        y += jitter() * 2;
+        a *= (1 + jitter() * 0.1)
+        b *= (1 + jitter() * 0.1)
+        rotation += jitter() * 1 / (2 * Math.PI)
 		tilingCall(
 			(x, y) => {
 				ctx.moveTo(x, y);
@@ -57,89 +58,91 @@
 		);
 	}
 
-	function tilingLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, rotation: number) {
-		const xOffset = Math.cos(rotation) * 100;
-		const yOffset = Math.sin(rotation) * 100;
+	function tilingLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, rotation: number, scale: number) {
+        scale = scale / 100;
+		const xOffset = Math.cos(rotation) * 100 * scale;
+		const yOffset = Math.sin(rotation) * 100 * scale;
 
 		ctx.beginPath();
 		ctx.fillStyle = palette.leaf;
-		tilingElipse(ctx, x + xOffset, y + yOffset, 50, 25, rotation);
+		tilingElipse(ctx, x + xOffset, y + yOffset, 50 * scale, 25 * scale, rotation);
 		ctx.fill();
 
 		ctx.beginPath();
 		ctx.fillStyle = palette.detail1;
-		tilingElipse(ctx, x + xOffset, y + yOffset, 40, 5, rotation);
+		tilingElipse(ctx, x + xOffset, y + yOffset, 40 * scale, 5 * scale, rotation);
 		ctx.fill();
 	}
 
-	function tilingFlower(ctx: CanvasRenderingContext2D, x: number, y: number) {
+	function tilingFlower(ctx: CanvasRenderingContext2D, x: number, y: number, scale: number) {
 		const initialRotation = random() * Math.PI * 2;
+        scale = scale / 100
 		for (let i = 0; i < 5; i++) {
 			const rotation = (i * 2 * Math.PI) / 5 + initialRotation;
-			const xOffset = Math.cos(rotation) * 50;
-			const yOffset = Math.sin(rotation) * 50;
+			const xOffset = Math.cos(rotation) * 50 * scale;
+			const yOffset = Math.sin(rotation) * 50 * scale;
 
 			ctx.beginPath();
 			ctx.fillStyle = palette.petal;
-			tilingElipse(ctx, x + xOffset, y + yOffset, 50, 50, rotation);
+			tilingElipse(ctx, x + xOffset, y + yOffset, 50 * scale, 50 * scale, rotation);
 			ctx.fill();
 		}
 
 		ctx.beginPath();
 		ctx.fillStyle = palette.detail1;
-		tilingCircle(ctx, x, y, 40);
+		tilingCircle(ctx, x, y, 40 * scale);
 		ctx.fill();
 
 		ctx.beginPath();
 		ctx.fillStyle = palette.detail2;
-		tilingCircle(ctx, x, y, 10);
+		tilingCircle(ctx, x, y, 10 * scale);
 		ctx.fill();
 
 		ctx.beginPath();
 		ctx.fillStyle = palette.leaf;
-		tilingCircle(ctx, x, y, 5);
+		tilingCircle(ctx, x, y, 5 * scale);
 		ctx.fill();
 
 		for (let i = 0; i < 15; i++) {
 			const rotation = (i * 2 * Math.PI) / 15 + initialRotation;
-			const xOffset = Math.cos(rotation) * 20;
-			const yOffset = Math.sin(rotation) * 20;
+			const xOffset = Math.cos(rotation) * 20 * scale;
+			const yOffset = Math.sin(rotation) * 20 * scale;
 
 			ctx.beginPath();
 			ctx.fillStyle = palette.leaf;
-			tilingElipse(ctx, x + xOffset, y + yOffset, 2, 2, rotation);
+			tilingCircle(ctx, x + xOffset, y + yOffset, 2 * scale);
 			ctx.fill();
 		}
 
 		for (let i = 0; i < 20; i++) {
 			const rotation = (i * 2 * Math.PI) / 20 + initialRotation;
-			const xOffset = Math.cos(rotation) * 30;
-			const yOffset = Math.sin(rotation) * 30;
+			const xOffset = Math.cos(rotation) * 30 * scale;
+			const yOffset = Math.sin(rotation) * 30 * scale;
 
 			ctx.beginPath();
 			ctx.fillStyle = palette.leaf;
-			tilingElipse(ctx, x + xOffset, y + yOffset, 2, 2, rotation);
+			tilingCircle(ctx, x + xOffset, y + yOffset, 2 * scale);
 			ctx.fill();
 		}
 	}
 
 	function distance(a: Point, b: Point): number {
-		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+		return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2)) / (a.scale + b.scale);
 	}
 
 	function minTilingDistance(a: Point, b: Point): number {
 		let offsets = [-size, 0, size];
 		return Math.min(
 			...offsets.map((dx) =>
-				Math.min(...offsets.map((dy) => distance(a, { x: b.x + dx, y: b.y + dy })))
+				Math.min(...offsets.map((dy) => distance(a, { x: b.x + dx, y: b.y + dy, scale: b.scale })))
 			)
 		);
 	}
 
-	function filterMinDistance(positions: Point[], minDistance: number): Point[] {
+	function filterMinDistance(positions: Point[]): Point[] {
 		return positions.reduce(
 			(filtered: Point[], incomming: Point) =>
-				filtered.some((old: Point) => minTilingDistance(old, incomming) < minDistance)
+				filtered.some((old: Point) => minTilingDistance(old, incomming) < 1)
 					? filtered
 					: [...filtered, incomming],
 			[]
@@ -159,17 +162,17 @@
 		ctx.fillRect(0, 0, size, size);
 
 		const candidates = [...Array(nFlowers)].map(() => {
-			return { x: random() * size, y: random() * size };
+			return { x: random() * size, y: random() * size, scale: random() * 100 + 100};
 		});
-		const positions = filterMinDistance(candidates, minDistance);
+		const positions = filterMinDistance(candidates);
 
 		positions.forEach((p) => {
-			tilingLeaf(ctx, p.x, p.y, random() * Math.PI * 2);
-			tilingLeaf(ctx, p.x, p.y, random() * Math.PI * 2);
+			tilingLeaf(ctx, p.x, p.y, random() * Math.PI * 2, p.scale);
+			tilingLeaf(ctx, p.x, p.y, random() * Math.PI * 2, p.scale);
 		});
 
 		positions.forEach((p) => {
-			tilingFlower(ctx, p.x, p.y);
+			tilingFlower(ctx, p.x, p.y, p.scale);
 		});
 	}
 </script>
