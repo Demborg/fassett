@@ -43,8 +43,9 @@
 		b: number,
 		rotation: number
 	) {
-        x += jitter() * 2;
-        y += jitter() * 2;
+        const scale = Math.sqrt(a * b) / 10
+        x += jitter() * scale;
+        y += jitter() * scale;
         a *= (1 + jitter() * 0.1)
         b *= (1 + jitter() * 0.1)
         rotation += jitter() * 1 / (2 * Math.PI)
@@ -109,6 +110,10 @@
 			const yOffset = Math.sin(rotation) * 20 * scale;
 
 			ctx.beginPath();
+			ctx.fillStyle = palette.detail2;
+			tilingCircle(ctx, x + xOffset, y + yOffset, 4 * scale);
+			ctx.fill();
+			ctx.beginPath();
 			ctx.fillStyle = palette.leaf;
 			tilingCircle(ctx, x + xOffset, y + yOffset, 2 * scale);
 			ctx.fill();
@@ -119,6 +124,10 @@
 			const xOffset = Math.cos(rotation) * 30 * scale;
 			const yOffset = Math.sin(rotation) * 30 * scale;
 
+			ctx.beginPath();
+			ctx.fillStyle = palette.detail2;
+			tilingCircle(ctx, x + xOffset, y + yOffset, 4 * scale);
+			ctx.fill();
 			ctx.beginPath();
 			ctx.fillStyle = palette.leaf;
 			tilingCircle(ctx, x + xOffset, y + yOffset, 2 * scale);
