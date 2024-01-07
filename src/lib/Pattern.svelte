@@ -9,7 +9,7 @@
 	let canvas: HTMLCanvasElement;
 	let random: () => number;
 
-	type Point = { x: number; y: number, scale: number };
+	type Point = { x: number; y: number; scale: number };
 
 	$: draw(seed, palette);
 
@@ -28,12 +28,12 @@
 	}
 
 	function tilingCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
-        tilingElipse(ctx, x, y, r, r, random() * 2 * Math.PI)
+		tilingElipse(ctx, x, y, r, r, random() * 2 * Math.PI);
 	}
 
-    function jitter() {
-        return random() * 2 -1
-    }
+	function jitter() {
+		return random() * 2 - 1;
+	}
 
 	function tilingElipse(
 		ctx: CanvasRenderingContext2D,
@@ -43,12 +43,12 @@
 		b: number,
 		rotation: number
 	) {
-        const scale = Math.sqrt(a * b) / 10
-        x += jitter() * scale;
-        y += jitter() * scale;
-        a *= (1 + jitter() * 0.1)
-        b *= (1 + jitter() * 0.1)
-        rotation += jitter() * 1 / (2 * Math.PI)
+		const scale = Math.sqrt(a * b) / 10;
+		x += jitter() * scale;
+		y += jitter() * scale;
+		a *= 1 + jitter() * 0.1;
+		b *= 1 + jitter() * 0.1;
+		rotation += (jitter() * 1) / (2 * Math.PI);
 		tilingCall(
 			(x, y) => {
 				ctx.moveTo(x, y);
@@ -59,8 +59,14 @@
 		);
 	}
 
-	function tilingLeaf(ctx: CanvasRenderingContext2D, x: number, y: number, rotation: number, scale: number) {
-        scale = scale / 100;
+	function tilingLeaf(
+		ctx: CanvasRenderingContext2D,
+		x: number,
+		y: number,
+		rotation: number,
+		scale: number
+	) {
+		scale = scale / 100;
 		const xOffset = Math.cos(rotation) * 100 * scale;
 		const yOffset = Math.sin(rotation) * 100 * scale;
 
@@ -77,7 +83,7 @@
 
 	function tilingFlower(ctx: CanvasRenderingContext2D, x: number, y: number, scale: number) {
 		const initialRotation = random() * Math.PI * 2;
-        scale = scale / 100
+		scale = scale / 100;
 		for (let i = 0; i < 5; i++) {
 			const rotation = (i * 2 * Math.PI) / 5 + initialRotation;
 			const xOffset = Math.cos(rotation) * 50 * scale;
@@ -171,7 +177,7 @@
 		ctx.fillRect(0, 0, size, size);
 
 		const candidates = [...Array(nFlowers)].map(() => {
-			return { x: random() * size, y: random() * size, scale: random() * 100 + 100};
+			return { x: random() * size, y: random() * size, scale: random() * 100 + 100 };
 		});
 		const positions = filterMinDistance(candidates);
 
